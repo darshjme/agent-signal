@@ -4,20 +4,15 @@
 
 # agent-signal
 
-**Event signaling and pub/sub coordination for LLM agents. Zero external dependencies.**
+**Event signaling and pub/sub for agent coordination**
 
-[![PyPI](https://img.shields.io/pypi/v/agent-signal?color=blue)](https://pypi.org/project/agent-signal/)
-[![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://python.org)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Zero deps](https://img.shields.io/badge/dependencies-zero-brightgreen)](pyproject.toml)
+[![PyPI version](https://img.shields.io/pypi/v/agent-signal?color=blue&style=flat-square)](https://pypi.org/project/agent-signal/) [![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue?style=flat-square)](https://python.org) [![License: MIT](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE) [![Tests](https://img.shields.io/badge/tests-passing-brightgreen?style=flat-square)](#)
 
 ---
 
 ## The Problem
 
-Production LLM agents fail silently. Without event signaling and pub/sub coordination, you get undefined behaviour at scale — race conditions, lost state, cascading failures, and no way to debug what went wrong.
-
-`agent-signal` gives you a production-ready event signaling and pub/sub coordination primitive with a clean API, tested edge cases, and zero configuration.
+Without a signal system, agents poll for state changes — wasting tokens, adding latency, and missing events that happen between polls. Push beats pull; events beat polling.
 
 ## Installation
 
@@ -25,88 +20,88 @@ Production LLM agents fail silently. Without event signaling and pub/sub coordin
 pip install agent-signal
 ```
 
-Or from source:
-
-```bash
-git clone https://github.com/darshjme/agent-signal.git
-cd agent-signal
-pip install -e .
-```
-
 ## Quick Start
 
 ```python
-from agent_signal import *  # see API reference below
+from agent_signal import EventBus, SignalRegistry
 
-# See examples/ directory for complete working examples
+# Initialise
+instance = EventBus(name="my_agent")
+
+# Use
+# see API reference below
+print(result)
 ```
 
 ## API Reference
 
-The main classes and functions are defined in `agent_signal/__init__.py`.
+### `EventBus`
 
-Key exports: `Signal · SignalRegistry · EventBus · glob · @on_signal`
+```python
+class EventBus:
+    """Broadcast event bus. Topics support glob patterns (e.g. 'agent.*')."""
+    def __init__(self) -> None:
+    def subscribe(self, topic: str, handler: Callable) -> None:
+        """Subscribe handler to topic. Topic may be a glob pattern."""
+    def unsubscribe(self, topic: str, handler: Callable) -> None:
+        """Unsubscribe handler from topic. Silent no-op if not found."""
+    def publish(self, topic: str, data: dict | None = None) -> None:
+        """Publish event to all handlers whose subscription pattern matches topic."""
+```
 
-All classes follow a consistent interface:
-- Instantiate with sensible defaults
-- Compose with other arsenal libraries
-- Zero external dependencies required
+### `SignalRegistry`
 
-See the source code and `tests/` directory for verified usage examples.
+```python
+class SignalRegistry:
+    """Central registry of named signals. Thread-safe."""
+    def __init__(self) -> None:
+    def signal(self, name: str) -> Signal:
+        """Return existing signal or create a new one."""
+    def emit(self, name: str, *args: Any, **kwargs: Any) -> None:
+        """Emit a named signal. No-op if signal not registered."""
+    def list_signals(self) -> list[str]:
+        """Return sorted list of registered signal names."""
+```
+
 
 ## How It Works
 
+### Flow
+
 ```mermaid
 flowchart LR
-    A[Agent Task] --> B[agent-signal]
-    B --> C{Decision}
-    C -->|success| D[✅ Result]
-    C -->|failure| E[⚠️ Handle]
-    E --> B
-
-    style B fill:#161b22,stroke:#8957e5,stroke-width:2,color:#8957e5
-    style D fill:#1a3320,stroke:#238636,color:#3fb950
-    style E fill:#3d1a1a,stroke:#f85149,color:#f85149
+    A[User Code] -->|create| B[EventBus]
+    B -->|configure| C[SignalRegistry]
+    C -->|execute| D{Success?}
+    D -->|yes| E[Return Result]
+    D -->|no| F[Error Handler]
+    F --> G[Fallback / Retry]
+    G --> C
 ```
+
+### Sequence
 
 ```mermaid
 sequenceDiagram
-    participant Agent
-    participant AgentSignal as agent-signal
-    participant Output
+    participant App
+    participant EventBus
+    participant SignalRegistry
 
-    Agent->>AgentSignal: initialize()
-    AgentSignal-->>Agent: ready
-
-    loop Agent Run
-        Agent->>AgentSignal: process(input)
-        AgentSignal-->>Agent: result
-    end
-
-    Agent->>Output: deliver(result)
+    App->>+EventBus: initialise()
+    EventBus->>+SignalRegistry: configure()
+    SignalRegistry-->>-EventBus: ready
+    App->>+EventBus: run(context)
+    EventBus->>+SignalRegistry: execute(context)
+    SignalRegistry-->>-EventBus: result
+    EventBus-->>-App: WorkflowResult
 ```
 
 ## Philosophy
 
-The conch shells of Kurukshetra coordinated an army across miles. agent-signal coordinates your agents.
+> *Nāda Brahman* — the primordial sound — is the first signal; all event systems echo this original pulse.
 
 ---
 
-## Part of the Arsenal
-
-`agent-signal` is one of six production libraries for LLM agents:
-
-| Library | Purpose |
-|---------|---------|
-| [herald](https://github.com/darshjme/herald) | Semantic task routing |
-| [engram](https://github.com/darshjme/engram) | Agent memory |
-| [sentinel](https://github.com/darshjme/sentinel) | ReAct loop guards |
-| [verdict](https://github.com/darshjme/verdict) | Agent evaluation |
-| [agent-guardrails](https://github.com/darshjme/agent-guardrails) | Output validation |
-| [agent-observability](https://github.com/darshjme/agent-observability) | Tracing & metrics |
-
-→ [arsenal](https://github.com/darshjme/arsenal) — the complete stack
-
----
+*Part of the [arsenal](https://github.com/darshjme/arsenal) — production stack for LLM agents.*
 
 *Built by [Darshankumar Joshi](https://github.com/darshjme), Gujarat, India.*
