@@ -1,0 +1,21 @@
+Metadata-Version: 2.4
+Name: agent-signal
+Version: 1.0.0
+Summary: Event signaling and pub/sub for agent coordination
+License: MIT
+Project-URL: Homepage, https://github.com/darshjme-codes/agent-signal
+Project-URL: Repository, https://github.com/darshjme-codes/agent-signal
+Project-URL: Issues, https://github.com/darshjme-codes/agent-signal/issues
+Keywords: agents,events,signals,pub-sub,coordination,async
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Topic :: Software Development :: Libraries
+Classifier: Topic :: System :: Distributed Computing
+Classifier: Typing :: Typed
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
