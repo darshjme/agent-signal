@@ -1,10 +1,12 @@
 <div align="center">
 
-<img src="assets/agent-signal-hero.png" alt="agent-signal — Vedic Arsenal" width="100%" />
+<img src="assets/agent-signal-hero.png" alt="agent-signal — Vedic Arsenal by Darshankumar Joshi" width="100%" />
 
 # ⚡ agent-signal
 
-### *संकेत* — Sanketa — the divine signal
+<h3><em>संकेत</em></h3>
+
+> *Sanketa — the divine signal*
 
 **Event signaling and pub/sub for agent coordination — Signal, SignalRegistry, EventBus with glob, @on_signal. Zero dependencies.**
 
@@ -39,6 +41,19 @@ Or clone directly:
 git clone https://github.com/darshjme/agent-signal.git
 cd agent-signal
 pip install -e .
+```
+
+## How It Works
+
+```mermaid
+flowchart LR
+    A[Input] --> B[agent-signal]
+    B --> C{Process}
+    C -- Success --> D[Output]
+    C -- Error --> E[Handle / Retry]
+    E --> B
+    style B fill:#6b21a8,color:#fff
+    note["Signal — Zero Dependencies"]
 ```
 
 ## Quick Start
@@ -90,7 +105,7 @@ MIT — use freely, build freely.
 
 <div align="center">
 
-**Built with ⚡ by [Darshankumar Joshi](https://github.com/darshjme)**
+**Built with ⚡ by [Darshankumar Joshi](https://github.com/darshjme)** · [@thedarshanjoshi](https://twitter.com/thedarshanjoshi)
 
 *"कर्मण्येवाधिकारस्ते मा फलेषु कदाचन"*
 *Your right is to action alone, never to the fruits thereof.*
