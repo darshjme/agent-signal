@@ -1,18 +1,32 @@
 <div align="center">
-<img src="assets/hero.svg" width="100%"/>
+
+<img src="assets/agent-signal-hero.png" alt="agent-signal — Vedic Arsenal" width="100%" />
+
+# ⚡ agent-signal
+
+### *संकेत* — Sanketa — the divine signal
+
+**Event signaling and pub/sub for agent coordination — Signal, SignalRegistry, EventBus with glob, @on_signal. Zero dependencies.**
+
+[![Python](https://img.shields.io/badge/Python-3.8%2B-blue?style=flat-square&logo=python)](https://python.org)
+[![Zero Dependencies](https://img.shields.io/badge/Dependencies-Zero-brightgreen?style=flat-square)](https://github.com/darshjme/agent-signal)
+[![Tests](https://img.shields.io/badge/Tests-Passing-success?style=flat-square)](https://github.com/darshjme/agent-signal/actions)
+[![License](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)](LICENSE)
+[![Vedic Arsenal](https://img.shields.io/badge/Vedic%20Arsenal-100%20libs-purple?style=flat-square)](https://github.com/darshjme/arsenal)
+
+*Part of the [**Vedic Arsenal**](https://github.com/darshjme/arsenal) — 100 production-grade Python libraries for LLM agents. Zero dependencies. Battle-tested.*
+
 </div>
-
-# agent-signal
-
-**Event signaling and pub/sub for agent coordination**
-
-[![PyPI version](https://img.shields.io/pypi/v/agent-signal?color=blue&style=flat-square)](https://pypi.org/project/agent-signal/) [![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue?style=flat-square)](https://python.org) [![License: MIT](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE) [![Tests](https://img.shields.io/badge/tests-passing-brightgreen?style=flat-square)](#)
 
 ---
 
-## The Problem
+## Overview
 
-Without a signal system, agents poll for state changes — wasting tokens, adding latency, and missing events that happen between polls. Push beats pull; events beat polling.
+`agent-signal` implements **event signaling and pub/sub for agent coordination — signal, signalregistry, eventbus with glob, @on_signal. zero dependencies.**
+
+Inspired by the Vedic principle of *संकेत* (Sanketa), this library brings the ancient wisdom of structured discipline to modern LLM agent engineering.
+
+No external dependencies. Pure Python 3.8+. Drop it in anywhere.
 
 ## Installation
 
@@ -20,88 +34,67 @@ Without a signal system, agents poll for state changes — wasting tokens, addin
 pip install agent-signal
 ```
 
+Or clone directly:
+```bash
+git clone https://github.com/darshjme/agent-signal.git
+cd agent-signal
+pip install -e .
+```
+
 ## Quick Start
 
 ```python
-from agent_signal import EventBus, SignalRegistry
+from signal import *
 
-# Initialise
-instance = EventBus(name="my_agent")
-
-# Use
-# see API reference below
-print(result)
+# Initialize
+# See examples/ for full usage patterns
 ```
 
-## API Reference
+## Why `agent-signal`?
 
-### `EventBus`
+Production LLM systems fail in predictable ways. `agent-signal` solves the **signal** failure mode with:
 
-```python
-class EventBus:
-    """Broadcast event bus. Topics support glob patterns (e.g. 'agent.*')."""
-    def __init__(self) -> None:
-    def subscribe(self, topic: str, handler: Callable) -> None:
-        """Subscribe handler to topic. Topic may be a glob pattern."""
-    def unsubscribe(self, topic: str, handler: Callable) -> None:
-        """Unsubscribe handler from topic. Silent no-op if not found."""
-    def publish(self, topic: str, data: dict | None = None) -> None:
-        """Publish event to all handlers whose subscription pattern matches topic."""
+- **Zero dependencies** — no version conflicts, no bloat
+- **Battle-tested patterns** — extracted from real production systems
+- **Type-safe** — full type hints, mypy-compatible
+- **Minimal surface area** — one job, done well
+- **Composable** — works with any LLM framework (LangChain, LlamaIndex, raw OpenAI, etc.)
+
+## The Vedic Arsenal
+
+`agent-signal` is part of **[darshjme/arsenal](https://github.com/darshjme/arsenal)** — a collection of 100 focused Python libraries for LLM agent infrastructure.
+
+Each library solves exactly one problem. Together they form a complete stack.
+
+```
+pip install agent-signal  # this library
+# Browse all 100: https://github.com/darshjme/arsenal
 ```
 
-### `SignalRegistry`
+## Contributing
 
-```python
-class SignalRegistry:
-    """Central registry of named signals. Thread-safe."""
-    def __init__(self) -> None:
-    def signal(self, name: str) -> Signal:
-        """Return existing signal or create a new one."""
-    def emit(self, name: str, *args: Any, **kwargs: Any) -> None:
-        """Emit a named signal. No-op if signal not registered."""
-    def list_signals(self) -> list[str]:
-        """Return sorted list of registered signal names."""
-```
+Found a bug? Have an improvement?
 
+1. Fork the repo
+2. Create a feature branch (`git checkout -b fix/your-fix`)
+3. Add tests
+4. Open a PR
 
-## How It Works
+All contributions welcome. Keep it zero-dependency.
 
-### Flow
+## License
 
-```mermaid
-flowchart LR
-    A[User Code] -->|create| B[EventBus]
-    B -->|configure| C[SignalRegistry]
-    C -->|execute| D{Success?}
-    D -->|yes| E[Return Result]
-    D -->|no| F[Error Handler]
-    F --> G[Fallback / Retry]
-    G --> C
-```
-
-### Sequence
-
-```mermaid
-sequenceDiagram
-    participant App
-    participant EventBus
-    participant SignalRegistry
-
-    App->>+EventBus: initialise()
-    EventBus->>+SignalRegistry: configure()
-    SignalRegistry-->>-EventBus: ready
-    App->>+EventBus: run(context)
-    EventBus->>+SignalRegistry: execute(context)
-    SignalRegistry-->>-EventBus: result
-    EventBus-->>-App: WorkflowResult
-```
-
-## Philosophy
-
-> *Nāda Brahman* — the primordial sound — is the first signal; all event systems echo this original pulse.
+MIT — use freely, build freely.
 
 ---
 
-*Part of the [arsenal](https://github.com/darshjme/arsenal) — production stack for LLM agents.*
+<div align="center">
 
-*Built by [Darshankumar Joshi](https://github.com/darshjme), Gujarat, India.*
+**Built with ⚡ by [Darshankumar Joshi](https://github.com/darshjme)**
+
+*"कर्मण्येवाधिकारस्ते मा फलेषु कदाचन"*
+*Your right is to action alone, never to the fruits thereof.*
+
+[Arsenal](https://github.com/darshjme/arsenal) · [GitHub](https://github.com/darshjme) · [Twitter](https://twitter.com/thedarshanjoshi)
+
+</div>
